@@ -16,8 +16,24 @@ class OrderResourceAssembler implements RepresentationModelAssembler<Order, Enti
     @Override
     public EntityModel<Order> toModel(Order order) {
 
-        return new EntityModel<>(order,
-                linkTo(methodOn(EmployeeController.class).one(order.getId())).withSelfRel(),
-                linkTo(methodOn(EmployeeController.class).all()).withRel("employees"));
+        // Unconditional links to single-item resource and aggregate root
+
+        EntityModel<Order> orderResource = new EntityModel<>(order,
+                linkTo(methodOn(OrderController.class).one(order.getId())).withSelfRel(),
+                linkTo(methodOn(OrderController.class).all()).withRel("orders")
+        );
+
+        // Conditional links based on state of the order
+
+        if (order.getStatus() == Status.IN_PROGRESS) {
+            orderResource.add(
+                    linkTo(methodOn(OrderController.class)
+                            .cancel(order.getId())).withRel("cancel"));
+            orderResource.add(
+                    linkTo(methodOn(OrderController.class)
+                            .complete(order.getId())).withRel("complete"));
+        }
+
+        return orderResource;
     }
 }
