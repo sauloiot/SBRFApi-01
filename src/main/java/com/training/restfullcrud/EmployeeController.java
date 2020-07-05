@@ -137,9 +137,12 @@ public class EmployeeController {
 
     //delete, delete a employee by id
     @DeleteMapping("/employees/{id}")
-    void deleteEmployee(@PathVariable Long id) {
+    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
         System.out.println("HTTP DELETE: " + repository.findById(id)+ " deleted");
+
         repository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 
