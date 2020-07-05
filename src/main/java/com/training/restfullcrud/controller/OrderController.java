@@ -1,5 +1,10 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.controller;
 
+import com.training.restfullcrud.exception.OrderNotFoundException;
+import com.training.restfullcrud.repository.OrderRepository;
+import com.training.restfullcrud.resource.OrderResourceAssembler;
+import com.training.restfullcrud.model.enums.Status;
+import com.training.restfullcrud.model.Order;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
@@ -15,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-class OrderController {
+public class OrderController {
 
     private final OrderRepository orderRepository;
     private final OrderResourceAssembler assembler;
@@ -28,7 +33,7 @@ class OrderController {
     }
 
     @GetMapping("/orders")
-    CollectionModel<EntityModel<Order>> all() {
+    public CollectionModel<EntityModel<Order>> all() {
 
         List<EntityModel<Order>> orders = orderRepository.findAll().stream()
                 .map(assembler::toModel)
@@ -39,14 +44,14 @@ class OrderController {
     }
 
     @GetMapping("/orders/{id}")
-    EntityModel<Order> one(@PathVariable Long id) {
+    public EntityModel<Order> one(@PathVariable Long id) {
         return assembler.toModel(
                 orderRepository.findById(id)
                         .orElseThrow(() -> new OrderNotFoundException(id)));
     }
 
     @PostMapping("/orders")
-    ResponseEntity<EntityModel<Order>> newOrder(@RequestBody Order order) {
+    public ResponseEntity<EntityModel<Order>> newOrder(@RequestBody Order order) {
 
         order.setStatus(Status.IN_PROGRESS);
         Order newOrder = orderRepository.save(order);
@@ -58,7 +63,7 @@ class OrderController {
 
 
     @DeleteMapping("/orders/{id}/cancel")
-    ResponseEntity<RepresentationModel> cancel(@PathVariable Long id) {
+    public ResponseEntity<RepresentationModel> cancel(@PathVariable Long id) {
 
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
@@ -74,7 +79,7 @@ class OrderController {
 
 
     @PutMapping("/orders/{id}/complete")
-    ResponseEntity<RepresentationModel> complete(@PathVariable Long id) {
+    public ResponseEntity<RepresentationModel> complete(@PathVariable Long id) {
 
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 

@@ -1,6 +1,7 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.model;
 
 
+import com.training.restfullcrud.model.enums.Status;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ public class Order {
 
     public Order() {
     }
-    Order(String description, Status status){
+    public Order(String description, Status status){
         this.description = description;
         this.status = status;
     }

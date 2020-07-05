@@ -1,5 +1,8 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.resource;
 
+import com.training.restfullcrud.controller.OrderController;
+import com.training.restfullcrud.model.Order;
+import com.training.restfullcrud.model.enums.Status;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -9,7 +12,7 @@ import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.metho
 
 
 @Component
-class OrderResourceAssembler implements RepresentationModelAssembler<Order, EntityModel<Order>> {
+public class OrderResourceAssembler implements RepresentationModelAssembler<Order, EntityModel<Order>> {
     public OrderResourceAssembler() {
     }
 

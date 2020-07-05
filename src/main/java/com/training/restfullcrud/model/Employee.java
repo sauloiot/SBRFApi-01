@@ -1,4 +1,4 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.model;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.exception;
 
 public class OrderNotFoundException extends RuntimeException {
     public OrderNotFoundException(Long id) {

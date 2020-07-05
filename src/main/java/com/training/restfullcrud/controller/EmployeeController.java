@@ -1,5 +1,9 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.controller;
 
+import com.training.restfullcrud.exception.EmployeeNotFoundException;
+import com.training.restfullcrud.repository.EmployeeRepository;
+import com.training.restfullcrud.resource.EmployeeResourceAssembler;
+import com.training.restfullcrud.model.Employee;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -27,25 +31,8 @@ public class EmployeeController {
     // Aggregate root
 
     //get, get all employees
-//    @GetMapping("/employees")
-//    List<Employee> all(){
-//        System.out.println("HTTP GET: ALl employees requesteds");
-//        return repository.findAll();
-//    }
-
-//    @GetMapping("/employees")
-//    CollectionModel<Employee> all(){
-//        System.out.println("HTTP GET: ALl employees requesteds");
-//        List<Employee> employee = repository.findAll();
-//
-//        return new CollectionModel(employee,
-//                linkTo(methodOn(EmployeeController.class).all()).withRel("employees"));
-//
-//    }
-//
-
     @GetMapping("/employees")
-    CollectionModel<EntityModel<Employee>> all() {
+    public CollectionModel<EntityModel<Employee>> all() {
         System.out.println("HTTP GET: ALl employees requesteds");
 
         List<EntityModel<Employee>> employees = repository.findAll().stream()
@@ -58,13 +45,8 @@ public class EmployeeController {
 
 
     //post, create a new employee on database
-//    @PostMapping("/employees")
-//    Employee newEmployee(@RequestBody Employee newEmployee){
-//        System.out.println("HTTP POST: a employee: "+ newEmployee + " created");
-//        return repository.save(newEmployee);
-//    }
     @PostMapping("/employees")
-    ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) throws URISyntaxException {
+    public ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) throws URISyntaxException {
 
         EntityModel<Employee> resource = assembler.toModel(repository.save(newEmployee));
         System.out.println("HTTP POST: a employee: "+ newEmployee + " created");
@@ -77,16 +59,8 @@ public class EmployeeController {
     // Single item
 
     //get, get employee by id
-
-//    @GetMapping("/employees/{id}")
-//    Employee one(@PathVariable Long id){
-//        System.out.println("HTTP GET: the employee: "+ repository.findById(id) +" requested");
-//        return repository.findById(id)
-//        .orElseThrow(() -> new EmployeeNotFoundException(id));
-//    }
-
     @GetMapping("/employees/{id}")
-    EntityModel one(@PathVariable Long id) {
+    public EntityModel one(@PathVariable Long id) {
 
         System.out.println("HTTP GET: the employee: "+ repository.findById(id) +" requested");
 
@@ -97,25 +71,8 @@ public class EmployeeController {
     }
 
     //put, update a employee by id
-
-//    @PutMapping("/employees/{id}")
-//    Employee replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id){
-//        return repository.findById(id)
-//                .map(employee -> {
-//                    System.out.println("HTTP PUT: Employee updated for: " + newEmployee);
-//                    employee.setName(newEmployee.getName());
-//                    employee.setRole(newEmployee.getRole());
-//                    return repository.save(employee);
-//                })
-//                .orElseGet(()->{
-//                    System.out.println("HTTP PUT FAILED, HTTP POST alternatively used for create a new employee: " + newEmployee);
-//                    newEmployee.setId(id);
-//                    return repository.save(newEmployee);
-//                });
-//
-//    }
     @PutMapping("/employees/{id}")
-    ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
+    public ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
 
         Employee updatedEmployee = repository.findById(id)
                 .map(employee -> {
@@ -137,7 +94,7 @@ public class EmployeeController {
 
     //delete, delete a employee by id
     @DeleteMapping("/employees/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
         System.out.println("HTTP DELETE: " + repository.findById(id)+ " deleted");
 
         repository.deleteById(id);

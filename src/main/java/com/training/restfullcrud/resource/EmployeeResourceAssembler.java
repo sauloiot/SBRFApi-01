@@ -1,5 +1,7 @@
-package com.training.restfullcrud;
+package com.training.restfullcrud.resource;
 
+import com.training.restfullcrud.controller.EmployeeController;
+import com.training.restfullcrud.model.Employee;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -9,7 +11,7 @@ import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.*;
 
 
 @Component
-class EmployeeResourceAssembler implements RepresentationModelAssembler<Employee, EntityModel<Employee>> {
+public class EmployeeResourceAssembler implements RepresentationModelAssembler<Employee, EntityModel<Employee>> {
     public EmployeeResourceAssembler() {
     }
 
