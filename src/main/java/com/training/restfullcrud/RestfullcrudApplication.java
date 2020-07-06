@@ -8,7 +8,6 @@ public class RestfullcrudApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RestfullcrudApplication.class, args);
-        System.out.println("Its ok ! the api is running on port 8080");
     }
 
 }

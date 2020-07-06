@@ -5,6 +5,7 @@ import com.training.restfullcrud.repository.OrderRepository;
 import com.training.restfullcrud.resource.OrderResourceAssembler;
 import com.training.restfullcrud.model.enums.Status;
 import com.training.restfullcrud.model.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
@@ -20,9 +21,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/orders")
 public class OrderController {
 
+    @Autowired
     private final OrderRepository orderRepository;
+    @Autowired
     private final OrderResourceAssembler assembler;
 
     OrderController(OrderRepository orderRepository,
@@ -32,7 +36,7 @@ public class OrderController {
         this.assembler = assembler;
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public CollectionModel<EntityModel<Order>> all() {
 
         List<EntityModel<Order>> orders = orderRepository.findAll().stream()
@@ -43,14 +47,14 @@ public class OrderController {
                 linkTo(methodOn(OrderController.class).all()).withSelfRel());
     }
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("{id}")
     public EntityModel<Order> one(@PathVariable Long id) {
         return assembler.toModel(
                 orderRepository.findById(id)
                         .orElseThrow(() -> new OrderNotFoundException(id)));
     }
 
-    @PostMapping("/orders")
+    @PostMapping
     public ResponseEntity<EntityModel<Order>> newOrder(@RequestBody Order order) {
 
         order.setStatus(Status.IN_PROGRESS);
@@ -62,7 +66,7 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/orders/{id}/cancel")
+    @DeleteMapping("/{id}/cancel")
     public ResponseEntity<RepresentationModel> cancel(@PathVariable Long id) {
 
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
@@ -74,11 +78,13 @@ public class OrderController {
 
         return ResponseEntity
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new VndErrors.VndError("Method not allowed", "You can't cancel an order that is in the " + order.getStatus() + " status"));
+                //.body(new VndErrors.VndError("Method not allowed", "You can't cancel an order that is in the " + order.getStatus() + " status"));
+                .build();
+
     }
 
 
-    @PutMapping("/orders/{id}/complete")
+    @PutMapping("/{id}/complete")
     public ResponseEntity<RepresentationModel> complete(@PathVariable Long id) {
 
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
@@ -90,7 +96,8 @@ public class OrderController {
 
         return ResponseEntity
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new VndErrors.VndError("Method not allowed", "You can't complete an order that is in the " + order.getStatus() + " status"));
+                //.body(new VndErrors.VndError("Method not allowed", "You can't complete an order that is in the " + order.getStatus() + " status"));
+                .build();
     }
 
 

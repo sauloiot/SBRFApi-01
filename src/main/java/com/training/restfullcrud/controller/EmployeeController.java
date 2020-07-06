@@ -4,6 +4,7 @@ import com.training.restfullcrud.exception.EmployeeNotFoundException;
 import com.training.restfullcrud.repository.EmployeeRepository;
 import com.training.restfullcrud.resource.EmployeeResourceAssembler;
 import com.training.restfullcrud.model.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/employees")
 public class EmployeeController {
+
+    @Autowired
     private final EmployeeRepository repository;
 
+    @Autowired
     private final EmployeeResourceAssembler assembler;
 
     public EmployeeController(EmployeeRepository repository, EmployeeResourceAssembler assembler) {
@@ -31,7 +36,7 @@ public class EmployeeController {
     // Aggregate root
 
     //get, get all employees
-    @GetMapping("/employees")
+    @GetMapping
     public CollectionModel<EntityModel<Employee>> all() {
         System.out.println("HTTP GET: ALl employees requesteds");
 
@@ -45,7 +50,7 @@ public class EmployeeController {
 
 
     //post, create a new employee on database
-    @PostMapping("/employees")
+    @PostMapping
     public ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) throws URISyntaxException {
 
         EntityModel<Employee> resource = assembler.toModel(repository.save(newEmployee));
@@ -59,7 +64,7 @@ public class EmployeeController {
     // Single item
 
     //get, get employee by id
-    @GetMapping("/employees/{id}")
+    @GetMapping("/{id}")
     public EntityModel one(@PathVariable Long id) {
 
         System.out.println("HTTP GET: the employee: "+ repository.findById(id) +" requested");
@@ -71,7 +76,7 @@ public class EmployeeController {
     }
 
     //put, update a employee by id
-    @PutMapping("/employees/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
 
         Employee updatedEmployee = repository.findById(id)
@@ -93,7 +98,7 @@ public class EmployeeController {
     }
 
     //delete, delete a employee by id
-    @DeleteMapping("/employees/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
         System.out.println("HTTP DELETE: " + repository.findById(id)+ " deleted");
 
